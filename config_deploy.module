@@ -459,18 +459,11 @@ function config_deploy_create_partial_config_archive($snapshot_directory) {
       }
     }
 
-    // Debugging: Ensure files are saved
-    watchdog('config_deploy', 'Files saved: ' . print_r(scandir($partial_storage_path), TRUE), [], WATCHDOG_DEBUG);
+    // Use Backdrop's ConfigFileStorage to create the tar.gz archive.
+    $partial_storage = new ConfigFileStorage($partial_storage_path);
+    $partial_storage->exportArchive($archive_path);
 
-    // Create the archive using system tar command instead of PharData.
-    $tar_command = sprintf('tar -czf %s -C %s .', escapeshellarg($archive_path), escapeshellarg($partial_storage_path));
-    $output = shell_exec($tar_command);
-
-    // Debugging: Check if the archive exists and has content
-    watchdog('config_deploy', "Archive created: $archive_path", [], WATCHDOG_DEBUG);
-    watchdog('config_deploy', "Archive size: " . filesize($archive_path), [], WATCHDOG_DEBUG);
-
-    // Clean up the temporary storage directory.
+    // Clean up the partial storage directory.
     file_unmanaged_delete_recursive($partial_storage_path);
 
     backdrop_set_message(t('Configuration archive created successfully.'));
