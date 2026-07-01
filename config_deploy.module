@@ -33,7 +33,7 @@ function config_deploy_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/development/configuration/deploy/delete'] = array(
-    'title' => t('delete'),
+    'title' => t('Delete'),
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('config_deploy_snapshot_delete_confirm'),
     'access arguments' => array('synchronize configuration'),
@@ -541,7 +541,7 @@ function config_deploy_snapshot_delete_confirm($form, &$form_state) {
 
   return confirm_form(
     $form,
-    t('Are you sure you want to delete latest sanpshot?'),
+    t('Are you sure you want to delete latest snapshot?'),
     'admin/config/development/configuration/deploy',
     t('This action cannot be undone.'),
     t('Delete'),
