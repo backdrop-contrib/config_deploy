@@ -627,10 +627,7 @@ function config_deploy_diff($name) {
   $file_name = $snapshot_directory . '/' . $name . '.json'; // Ensure JSON extension
 
   // Ensure the snapshot file exists before reading.
-  if (!file_exists($file_name)) {
-    watchdog('config_deploy', "Configuration file $file_name does not exist.", [], WATCHDOG_WARNING);
-    return [[t('Error: Snapshot file not found.')]];
-  }
+  $config_new = !file_exists($file_name);
 
   // Ensure proper config name formatting.
   $config_name = str_replace('.json', '', $name);
@@ -644,7 +641,7 @@ function config_deploy_diff($name) {
   }
 
   // Read and decode the snapshot file.
-  $target_data_raw = file_get_contents($file_name);
+  $target_data_raw = (!$config_new) ? file_get_contents($file_name) : '{}';
   $target_data = json_decode($target_data_raw, TRUE);
 
   // Normalize data for comparison.
